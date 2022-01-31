@@ -107,6 +107,7 @@ makeScoreForm = (score) => {
     scoreArticleEl.appendChild(scoreFormLabelEl);
 
     let scoreFormEl = document.createElement('form');
+    scoreFormEl.className = 'score-form';
     scoreFormEl.setAttribute('data-score', score);
 
     let inputContainerEl = document.createElement('div');
@@ -120,13 +121,15 @@ makeScoreForm = (score) => {
     let formSubmitBtnEl = document.createElement('button');
     formSubmitBtnEl.className = 'btn btn-primary';    
     formSubmitBtnEl.id = 'submit-score';
-    formSubmitBtnEl.type = "Save Score";
+    formSubmitBtnEl.type = "submit";
     formSubmitBtnEl.textContent = 'Save Score';
     buttonContainerEl.appendChild(formSubmitBtnEl);
 
     scoreFormEl.appendChild(buttonContainerEl);
 
     scoreArticleEl.appendChild(scoreFormEl);
+
+    scoreFormEl.addEventListener('submit', scoreFormHandler);
 
     return scoreArticleEl;
 }
@@ -188,7 +191,7 @@ questionChoiceHandler = (event) => {
 scoreFormHandler = (event) => {
     event.preventDefault();
     console.log(event);
-    let form = document.querySelector('form');
+    let form = document.querySelector('.score-form');
     var nameInput = form.querySelector("input[name='score-name']");
 
     highscores.push({ name: nameInput, score: form.getAttribute('data-score') });
@@ -226,9 +229,9 @@ retrieveScores();
 makeStartButton();
 primaryAreaEl.addEventListener('click', questionChoiceHandler);
 primaryAreaEl.addEventListener('click', startButtonHandler);
-primaryAreaEl.addEventListener('submit', scoreFormHandler);
+//document.querySelector('main').addEventListener('submit', scoreFormHandler);
 
 //test code region. Remove from final project
-document.querySelector("#check-question").appendChild( makeQuestion(questions[0]) );
+/* document.querySelector("#check-question").appendChild( makeQuestion(questions[0]) );
 document.querySelector("#highscore").appendChild( makeScoreForm(33) );
-document.querySelector("#highscore").appendChild( makeScoreArea() );
+document.querySelector("#highscore").appendChild( makeScoreArea() ); */
