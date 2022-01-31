@@ -11,10 +11,37 @@ header h1, header h3 {
     margin: 15px;
 }
 
+article{
+    margin: 20px;
+}
+
+.answer-choice{
+    font-size: 24px;
+    font-weight: bolder;
+    margin: 10px;
+    /* border: 2px solid;
+    border-radius: 5px; */
+    padding: auto 40px;
+}
+
+form{
+    display: flex;
+}
+
+.form-group{
+    flex-basis: 100%;
+}
+
+.score-individual{
+    font-size: 24px;
+}
+
 .primary{
     display: flex;
     justify-content: center;
+    margin-top: 100px;
 }
+
 .answer-wrong{
     background-color: red;
 }

@@ -10,7 +10,7 @@ let timerEl = document.querySelector('#timer');
 
 var makeStartButton = function() {
     var startButtonEl = document.createElement('button');
-    startButtonEl.className = 'start-btn btn';
+    startButtonEl.className = 'start-btn btn btn-primary';
     startButtonEl.textContent = 'Start the Quiz!'
 
     primaryAreaEl.append(startButtonEl);
@@ -22,7 +22,6 @@ var makeStartButton = function() {
 //call next question
 
 nextQuestion = () => {
-    console.log( "ind" + qindex,' ', questions.length)
     if(qindex == questions.length){
         endQuiz();
         return;
@@ -67,7 +66,9 @@ setTimer = () => {
 endQuiz = () => {
     //generate score and score submission form
     inQuiz = false;
-    primaryAreaEl.innerHTML = "<h3>Congrats your score is "+ (timer + qindex)
+
+    primaryAreaEl.innerHTML = '';
+    primaryAreaEl.appendChild( makeScoreForm((timer + qindex)) );
 
 };
 
@@ -102,10 +103,11 @@ makeScoreForm = (score) => {
 
     let scoreFormLabelEl = document.createElement('div');
     scoreFormLabelEl.className = 'score-info';
-    scoreFormLabelEl.innerHTML = "<h3 class=''>You scored: " + score + ". Enter Name for Scoreboard</h3>"
+    scoreFormLabelEl.innerHTML = "<h3 class=''>Your score is: " + score + ". Enter Name for Scoreboard</h3>"
     scoreArticleEl.appendChild(scoreFormLabelEl);
 
     let scoreFormEl = document.createElement('form');
+    scoreFormEl.setAttribute('data-score', score);
 
     let inputContainerEl = document.createElement('div');
     inputContainerEl.className = 'form-group';
@@ -116,7 +118,7 @@ makeScoreForm = (score) => {
     buttonContainerEl.className = 'form-group';
 
     let formSubmitBtnEl = document.createElement('button');
-    formSubmitBtnEl.className = 'btn';    
+    formSubmitBtnEl.className = 'btn btn-primary';    
     formSubmitBtnEl.id = 'submit-score';
     formSubmitBtnEl.type = "Save Score";
     formSubmitBtnEl.textContent = 'Save Score';
@@ -130,11 +132,12 @@ makeScoreForm = (score) => {
 }
 
 makeScoreArea = () => {
+    console.log('making score')
     var scoreAreaEl = document.createElement('article');
 
     var scoreLabelEl = document.createElement('h3');
     scoreLabelEl.className = 'score-label';
-    scoreLabelEl.textContent = "Hightscores";
+    scoreLabelEl.textContent = "High Scores:";
     scoreAreaEl.appendChild(scoreLabelEl);
 
     var scoreListEl = document.createElement('ol');
@@ -167,11 +170,9 @@ questionChoiceHandler = (event) => {
     var targetEl = event.target;
 
     if(targetEl.matches('.answer-choice')){
-        console.log(targetEl);
         var chosen = targetEl.getAttribute('data-choice');
         
         var correct = questions[qindex-1].correct;
-        console.log(chosen,' ', correct);
         if(chosen != correct){
             event.target.classList.add('answer-wrong');
             timer -= 5;
@@ -186,9 +187,11 @@ questionChoiceHandler = (event) => {
 //    be sure to call save scores
 scoreFormHandler = (event) => {
     event.preventDefault();
-    var nameInput = document.querySelector("input[name='score-name']")
+    console.log(event);
+    let form = document.querySelector('form');
+    var nameInput = form.querySelector("input[name='score-name']");
 
-    highscores.push({name: nameInput, score: userScore})
+    highscores.push({ name: nameInput, score: form.getAttribute('data-score') });
 
     highscores.sort((itemA, itemB) => itemA.score - itemB.score)
 
@@ -228,3 +231,4 @@ primaryAreaEl.addEventListener('submit', scoreFormHandler);
 //test code region. Remove from final project
 document.querySelector("#check-question").appendChild( makeQuestion(questions[0]) );
 document.querySelector("#highscore").appendChild( makeScoreForm(33) );
+document.querySelector("#highscore").appendChild( makeScoreArea() );
