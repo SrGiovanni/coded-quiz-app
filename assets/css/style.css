@@ -1,7 +1,20 @@
+* {
+    box-sizing: border-box;
+  }
 
+header{
+    display: flex;
+    justify-content: space-between;
+}
 
+header h1, header h3 {
+    margin: 15px;
+}
 
-
+.primary{
+    display: flex;
+    justify-content: center;
+}
 .answer-wrong{
     background-color: red;
 }

@@ -1,5 +1,5 @@
 
-var highscores = [];
+var highscores = [{name: 'aaa', score: 31} ];
 var timer = 0;
 var qindex = 0;
 var questions = questionBank;
@@ -10,7 +10,7 @@ let timerEl = document.querySelector('#timer');
 
 var makeStartButton = function() {
     var startButtonEl = document.createElement('button');
-    startButtonEl.className = 'start-btn';
+    startButtonEl.className = 'start-btn btn';
     startButtonEl.textContent = 'Start the Quiz!'
 
     primaryAreaEl.append(startButtonEl);
@@ -68,6 +68,7 @@ endQuiz = () => {
     //generate score and score submission form
     inQuiz = false;
     primaryAreaEl.innerHTML = "<h3>Congrats your score is "+ (timer + qindex)
+
 };
 
 makeQuestion = (questionObj) => {
@@ -94,6 +95,59 @@ makeQuestion = (questionObj) => {
     questionEl.appendChild(answerListEl);
 
     return questionEl;
+};
+
+makeScoreForm = (score) => {
+    let scoreArticleEl = document.createElement('article');
+
+    let scoreFormLabelEl = document.createElement('div');
+    scoreFormLabelEl.className = 'score-info';
+    scoreFormLabelEl.innerHTML = "<h3 class=''>You scored: " + score + ". Enter Name for Scoreboard</h3>"
+    scoreArticleEl.appendChild(scoreFormLabelEl);
+
+    let scoreFormEl = document.createElement('form');
+
+    let inputContainerEl = document.createElement('div');
+    inputContainerEl.className = 'form-group';
+    inputContainerEl.innerHTML = '<input type="text" name="score-name" placeholder="Enter Name" />'
+    scoreFormEl.appendChild(inputContainerEl);
+
+    let buttonContainerEl = document.createElement('div');
+    buttonContainerEl.className = 'form-group';
+
+    let formSubmitBtnEl = document.createElement('button');
+    formSubmitBtnEl.className = 'btn';    
+    formSubmitBtnEl.id = 'submit-score';
+    formSubmitBtnEl.type = "Save Score";
+    formSubmitBtnEl.textContent = 'Save Score';
+    buttonContainerEl.appendChild(formSubmitBtnEl);
+
+    scoreFormEl.appendChild(buttonContainerEl);
+
+    scoreArticleEl.appendChild(scoreFormEl);
+
+    return scoreArticleEl;
+}
+
+makeScoreArea = () => {
+    var scoreAreaEl = document.createElement('article');
+
+    var scoreLabelEl = document.createElement('h3');
+    scoreLabelEl.className = 'score-label';
+    scoreLabelEl.textContent = "Hightscores";
+    scoreAreaEl.appendChild(scoreLabelEl);
+
+    var scoreListEl = document.createElement('ol');
+    let scoreLength = Math.min(10, highscores.length);
+    for (let index = 0; index < scoreLength; index++) {
+        let scoreEl = document.createElement('li');
+        scoreEl.className = 'score-individual';
+        scoreEl.textContent = highscores[index].name + ": " + highscores[index].score;
+        scoreListEl.appendChild(scoreEl);        
+    };
+    scoreAreaEl.appendChild(scoreListEl);
+
+    return scoreAreaEl;
 };
 
 startButtonHandler = (event) => {
@@ -130,14 +184,47 @@ questionChoiceHandler = (event) => {
 
 // add form submit handler function
 //    be sure to call save scores
+scoreFormHandler = (event) => {
+    event.preventDefault();
+    var nameInput = document.querySelector("input[name='score-name']")
+
+    highscores.push({name: nameInput, score: userScore})
+
+    highscores.sort((itemA, itemB) => itemA.score - itemB.score)
+
+    saveScores();
+
+    primaryAreaEl.innerHTML = '';
+    makeStartButton();
+
+    primaryAreaEl.appendChild(makeScoreArea() );
+}
+
 
 //add save scores function
+saveScores = () => {
+    //save scores to local storage
+    localStorage.setItem('scores', JSON.stringify(highscores));
+}
 
 //add a retrieve scores function
+retrieveScores = () => {
+    var savedScores = localStorage.getItem('scores');
+    if(savedScores == null){
+        return false;
+    }
+    highscores = JSON.parse(savedScores);
+}
 
 //run a retrieve scores call
+retrieveScores();
 
 //on script load create a start button
 makeStartButton();
 primaryAreaEl.addEventListener('click', questionChoiceHandler);
 primaryAreaEl.addEventListener('click', startButtonHandler);
+primaryAreaEl.addEventListener('submit', scoreFormHandler);
+
+//test code region. Remove from final project
+document.querySelector("#check-question").appendChild( makeQuestion(questions[0]) );
+document.querySelector("#highscore").appendChild( makeScoreForm(33) );
