@@ -68,7 +68,9 @@ endQuiz = () => {
     inQuiz = false;
 
     primaryAreaEl.innerHTML = '';
-    primaryAreaEl.appendChild( makeScoreForm((timer + qindex)) );
+    const scoreForm = makeScoreForm((timer + qindex));
+    console.log(scoreForm);
+    primaryAreaEl.appendChild( scoreForm );
 
 };
 
@@ -121,7 +123,7 @@ makeScoreForm = (score) => {
     let formSubmitBtnEl = document.createElement('button');
     formSubmitBtnEl.className = 'btn btn-primary';    
     formSubmitBtnEl.id = 'submit-score';
-    formSubmitBtnEl.type = "submit";
+    //formSubmitBtnEl.type = "submit";
     formSubmitBtnEl.textContent = 'Save Score';
     buttonContainerEl.appendChild(formSubmitBtnEl);
 
@@ -129,6 +131,7 @@ makeScoreForm = (score) => {
 
     scoreArticleEl.appendChild(scoreFormEl);
 
+    console.log('adding handler', scoreFormHandler);
     scoreFormEl.addEventListener('submit', scoreFormHandler);
 
     return scoreArticleEl;
